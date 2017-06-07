@@ -180,4 +180,8 @@ angular.module('nutritionApp').controller('nutritionController', ['$http', '$mdE
     }, 2000);
   };
 
+  $scope.onMultiple = function () {
+    console.log('On multiple selection');
+  };
+
 }]);

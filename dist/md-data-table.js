@@ -2,14 +2,14 @@
  * Angular Material Data Table
  * https://github.com/daniel-nagy/md-data-table
  * @license MIT
- * v0.10.9
+ * v0.11.10
  */
 (function (window, angular, undefined) {
 'use strict';
 
 angular.module('md.table.templates', ['md-table-pagination.html', 'md-table-progress.html', 'arrow-up.svg', 'navigate-before.svg', 'navigate-first.svg', 'navigate-last.svg', 'navigate-next.svg']);
 
-angular.module('md-table-pagination.html', []).run(['$templateCache', function($templateCache) {
+angular.module('md-table-pagination.html', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('md-table-pagination.html',
     '<div class="page-select" ng-if="$pagination.showPageSelect()">\n' +
     '  <div class="label">{{$pagination.label.page}}</div>\n' +
@@ -50,7 +50,7 @@ angular.module('md-table-pagination.html', []).run(['$templateCache', function($
     '</div>');
 }]);
 
-angular.module('md-table-progress.html', []).run(['$templateCache', function($templateCache) {
+angular.module('md-table-progress.html', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('md-table-progress.html',
     '<tr>\n' +
     '  <th colspan="{{columnCount()}}">\n' +
@@ -59,27 +59,27 @@ angular.module('md-table-progress.html', []).run(['$templateCache', function($te
     '</tr>');
 }]);
 
-angular.module('arrow-up.svg', []).run(['$templateCache', function($templateCache) {
+angular.module('arrow-up.svg', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('arrow-up.svg',
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>');
 }]);
 
-angular.module('navigate-before.svg', []).run(['$templateCache', function($templateCache) {
+angular.module('navigate-before.svg', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('navigate-before.svg',
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>');
 }]);
 
-angular.module('navigate-first.svg', []).run(['$templateCache', function($templateCache) {
+angular.module('navigate-first.svg', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('navigate-first.svg',
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 6 v12 h2 v-12 h-2z M17.41 7.41L16 6l-6 6 6 6 1.41-1.41L12.83 12z"/></svg>');
 }]);
 
-angular.module('navigate-last.svg', []).run(['$templateCache', function($templateCache) {
+angular.module('navigate-last.svg', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('navigate-last.svg',
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 6 v12 h2 v-12 h-2z M8 6L6.59 7.41 11.17 12l-4.58 4.59L8 18l6-6z"/></svg>');
 }]);
 
-angular.module('navigate-next.svg', []).run(['$templateCache', function($templateCache) {
+angular.module('navigate-next.svg', []).run(['$templateCache', function ($templateCache) {
   $templateCache.put('navigate-next.svg',
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>');
 }]);
@@ -711,24 +711,24 @@ function mdHead($compile) {
     tElement.addClass('md-head');
     return postLink;
   }
-  
+
   // empty controller to be bind scope properties to
   function Controller() {
-    
+
   }
-  
+
   function postLink(scope, element, attrs, tableCtrl) {
     // because scope.$watch is unpredictable
     var oldValue = new Array(2);
-    
+
     function addCheckboxColumn() {
       element.children().prepend('<th class="md-column md-checkbox-column">');
     }
-    
+
     function attatchCheckbox() {
       element.prop('lastElementChild').firstElementChild.appendChild($compile(createCheckBox())(scope)[0]);
     }
-    
+
     function createCheckBox() {
       return angular.element('<md-checkbox>').attr({
         'aria-label': 'Select All',
@@ -737,43 +737,43 @@ function mdHead($compile) {
         'ng-disabled': '!getSelectableRows().length'
       });
     }
-    
+
     function detachCheckbox() {
       var cell = element.prop('lastElementChild').firstElementChild;
-      
+
       if(cell.classList.contains('md-checkbox-column')) {
         angular.element(cell).empty();
       }
     }
-    
+
     function enableRowSelection() {
       return tableCtrl.$$rowSelect;
     }
-    
+
     function mdSelectCtrl(row) {
       return angular.element(row).controller('mdSelect');
     }
-    
+
     function removeCheckboxColumn() {
       Array.prototype.some.call(element.find('th'), function (cell) {
         return cell.classList.contains('md-checkbox-column') && cell.remove();
       });
     }
-    
+
     scope.allSelected = function () {
       var rows = scope.getSelectableRows();
-      
+
       return rows.length && rows.every(function (row) {
         return row.isSelected();
       });
     };
-    
+
     scope.getSelectableRows = function () {
       return tableCtrl.getBodyRows().map(mdSelectCtrl).filter(function (ctrl) {
         return ctrl && !ctrl.disabled;
       });
     };
-    
+
     scope.selectAll = function () {
       tableCtrl.getBodyRows().map(mdSelectCtrl).forEach(function (ctrl) {
         if(ctrl && !ctrl.isSelected()) {
@@ -781,11 +781,14 @@ function mdHead($compile) {
         }
       });
     };
-    
+
     scope.toggleAll = function () {
+      if(angular.isFunction(scope.$mdHead.onToggleAll)) {
+        scope.$mdHead.onToggleAll(!scope.allSelected());
+      }
       return scope.allSelected() ? scope.unSelectAll() : scope.selectAll();
     };
-    
+
     scope.unSelectAll = function () {
       tableCtrl.getBodyRows().map(mdSelectCtrl).forEach(function (ctrl) {
         if(ctrl && ctrl.isSelected()) {
@@ -793,12 +796,12 @@ function mdHead($compile) {
         }
       });
     };
-    
+
     scope.$watchGroup([enableRowSelection, tableCtrl.enableMultiSelect], function (newValue) {
       if(newValue[0] !== oldValue[0]) {
         if(newValue[0]) {
           addCheckboxColumn();
-          
+
           if(newValue[1]) {
             attatchCheckbox();
           }
@@ -812,11 +815,11 @@ function mdHead($compile) {
           detachCheckbox();
         }
       }
-      
+
       angular.copy(newValue, oldValue);
     });
   }
-  
+
   return {
     bindToController: true,
     compile: compile,
@@ -826,12 +829,14 @@ function mdHead($compile) {
     restrict: 'A',
     scope: {
       order: '=?mdOrder',
-      onReorder: '=?mdOnReorder'
+      onReorder: '=?mdOnReorder',
+      onToggleAll: '=?mdOnMultipleSelect'
     }
   };
 }
 
 mdHead.$inject = ['$compile'];
+
 
 angular.module('md.data.table').directive('mdRow', mdRow);
 

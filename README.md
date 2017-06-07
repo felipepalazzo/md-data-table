@@ -71,19 +71,19 @@ angular.module('myApp', [require('angular-material-data-table')]);
 
 angular.module('demoApp').controller('sampleController', ['$nutrition', '$scope', function ($nutrition, $scope) {
   'use strict';
-  
+
   $scope.selected = [];
-  
+
   $scope.query = {
     order: 'name',
     limit: 5,
     page: 1
   };
-  
+
   function success(desserts) {
     $scope.desserts = desserts;
   }
-  
+
   $scope.getDesserts = function () {
     $scope.promise = $nutrition.desserts.get($scope.query, success).$promise;
   };
@@ -205,14 +205,14 @@ $scope.editComment = function (event, dessert) {
   // if auto selection is enabled you will want to stop the event
   // from propagating and selecting the row
   event.stopPropagation();
-  
-  /* 
+
+  /*
    * messages is commented out because there is a bug currently
    * with ngRepeat and ngMessages were the messages are always
    * displayed even if the error property on the ngModelController
    * is not set, I've included it anyway so you get the idea
    */
-   
+
   var promise = $mdEditDialog.small({
     // messages: {
     //   test: 'I don\'t like tests!'
@@ -432,6 +432,7 @@ ctrl.limitOptions = [5, 10, 15, {
 | `mdAutoSelect` | `mdRow`   | `[expression]`    | Select a row by clicking anywhere in the row. |
 | `mdOnDeselect` | `mdRow`   | `function`        | A callback function for when an item is deselected. The item will be passed as an argument to the callback. |
 | `mdOnSelect`   | `mdRow`   | `function`        | A callback function for when an item is selected. The item will be passed as an argument to the callback. |
+| `mdOnMultipleSelect` | `mdHead` | `function` | A callback function for when an multiple selection is selected. |
 | `mdRowSelect`  | `mdTable` | `[expression]`    | Enable row selection. |
 | `mdSelect`     | `mdRow`   | `any`             | The item to be selected. |
 | `mdSelectId`   | `mdRow`   | `number` `string` | A unique identifier for the selected item. The identifier must be a property of the item. |
