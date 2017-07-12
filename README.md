@@ -24,41 +24,14 @@ A fork-able [Codepen](http://codepen.io/anon/pen/BjvLVJ?editors=1010). Please us
 
 ## Installation
 
-#### Using Bower
-
-This package is installable through the Bower package manager.
-
 ```
-bower install angular-material-data-table --save
-```
-
-In your `index.html` file, include the data table module and style sheet.
-
-```html
-<!-- style sheet -->
-<link href="bower_components/angular-material-data-table/dist/md-data-table.min.css" rel="stylesheet" type="text/css"/>
-<!-- module -->
-<script type="text/javascript" src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
-```
-
-Include the `md.data.table` module as a dependency in your application.
-
-```javascript
-angular.module('myApp', ['ngMaterial', 'md.data.table']);
-```
-
-#### Using npm and Browserify (or JSPM)
-
-In addition, this package may be installed using npm.
-
-```
-npm install angular-material-data-table --save
+npm install pz-angular-material-data-table --save
 ```
 
 You may use Browserify to inject this module into your application.
 
 ```javascript
-angular.module('myApp', [require('angular-material-data-table')]);
+angular.module('myApp', [require('pz-angular-material-data-table')]);
 ```
 
 ## Usage
